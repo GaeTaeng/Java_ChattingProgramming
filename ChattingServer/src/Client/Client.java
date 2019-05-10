@@ -38,8 +38,11 @@ public class Client extends JFrame implements ActionListener{
 	private JButton send_btn = new JButton("전 송");
 	
 	
-	private JList list = new JList(); // 접속자 리스트
-	private JList list_1 = new JList(); // 전체 방 목록 리스트
+	private JList User_list = new JList(); // 접속자 리스트
+	private JList Room_list = new JList(); // 전체 방 목록 리스트
+	
+
+	private JTextArea Chat_area = new JTextArea(); // 채팅창 변수
 	Client() {
 		Login_init();// 로그인창 구성 메소드
 		Main_init();
@@ -49,6 +52,10 @@ public class Client extends JFrame implements ActionListener{
 	
 	public void start() {
 		login_btn.addActionListener(this);
+		notesend_btn.addActionListener(this);
+		joinroom_btn.addActionListener(this);
+		createroom_btn.addActionListener(this);
+		send_btn.addActionListener(this);
 	}
 	private void Main_init() {
 
@@ -62,8 +69,8 @@ public class Client extends JFrame implements ActionListener{
 		label.setBounds(12, 10, 140, 15);
 		contentPane.add(label);
 		
-		list.setBounds(12, 28, 140, 173);
-		contentPane.add(list);
+		User_list.setBounds(12, 28, 140, 173);
+		contentPane.add(User_list);
 		
 		notesend_btn.setBounds(12, 211, 140, 23);
 		contentPane.add(notesend_btn);
@@ -72,8 +79,8 @@ public class Client extends JFrame implements ActionListener{
 		label_1.setBounds(12, 244, 140, 15);
 		contentPane.add(label_1);
 		
-		list_1.setBounds(12, 265, 140, 173);
-		contentPane.add(list_1);
+		Room_list.setBounds(12, 265, 140, 173);
+		contentPane.add(Room_list);
 		
 		joinroom_btn.setBounds(12, 447, 140, 23);
 		contentPane.add(joinroom_btn);
@@ -85,9 +92,8 @@ public class Client extends JFrame implements ActionListener{
 		createroom_btn.setBounds(12, 473, 140, 23);
 		contentPane.add(createroom_btn);
 		
-		JTextArea textArea = new JTextArea();
-		textArea.setBounds(164, 6, 620, 438);
-		contentPane.add(textArea);
+		Chat_area.setBounds(164, 6, 620, 438);
+		contentPane.add(Chat_area);
 		
 		textField = new JTextField();
 		textField.setBounds(164, 474, 502, 21);
@@ -154,6 +160,14 @@ public class Client extends JFrame implements ActionListener{
 		// TODO Auto-generated method stub
 		if(e.getSource() == login_btn) {
 			System.out.println("Login Button Click!");
+		}else if(e.getSource() == notesend_btn) {
+			System.out.println("NoteSend Button Click!");
+		}else if(e.getSource() == joinroom_btn) {
+			System.out.println("joinroom_btn Click!");
+		}else if(e.getSource() == createroom_btn) {
+			System.out.println("createroom_btn Click!");
+		}else if(e.getSource() == send_btn) {
+			System.out.println("send_btn Click!");
 		}
 	}
 }
