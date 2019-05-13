@@ -1,6 +1,9 @@
 package Server;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -26,6 +29,12 @@ public class Server extends JFrame implements ActionListener{
 
 	private JButton start_btn = new JButton("서버실행");
 	private JButton stop_btn = new JButton("서버 중지");
+	
+	//Network 자원
+	private ServerSocket server_socket;
+	private Socket socket;
+	private int port;
+	
 	Server() {
 		init(); // 화면생성
 		start(); // 리스너
@@ -64,6 +73,38 @@ public class Server extends JFrame implements ActionListener{
 		
 		this.setVisible(true);
 	}
+	
+	private void Server_start() {
+		try {
+			server_socket = new ServerSocket(port); // 12345번 포트접속 
+					
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		if(server_socket != null) {
+			Connection();
+		}
+		socket = new Socket();
+	}
+	private void Connection() {
+		
+		//1가지 쓰레드는 1가지의 일만 처리가 가능하다
+		Thread th = new Thread(new Runnable() {
+
+			@Override
+			public void run() { // 스레드에서 할 일을 기재
+				try {
+					textArea.append("사용자 접속 대기 중\n");
+					socket = server_socket.accept(); // 사용자 접속 무한 대기
+					textArea.append("사용자 접속!!!\n");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			
+		});
+		th.start();
+	}
 	public static void main(String[] args) {
 		new Server();
 	}
@@ -73,6 +114,8 @@ public class Server extends JFrame implements ActionListener{
 		// TODO Auto-generated method stub
 		if(e.getSource() == start_btn) {
 			System.out.println("Start Button Click!");
+			port = Integer.parseInt(port_tf.getText().trim());
+			Server_start(); // 소켓 생성 및 
 		}else if(e.getSource() == stop_btn) {
 			System.out.println("Stop Button Click!");
 		}

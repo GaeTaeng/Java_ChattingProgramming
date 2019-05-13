@@ -2,6 +2,9 @@ package Client;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -43,6 +46,11 @@ public class Client extends JFrame implements ActionListener{
 	
 
 	private JTextArea Chat_area = new JTextArea(); // 채팅창 변수
+	
+	//Network Resource
+	private Socket socket;
+	private String ip;
+	private int port;
 	Client() {
 		Login_init();// 로그인창 구성 메소드
 		Main_init();
@@ -151,6 +159,16 @@ public class Client extends JFrame implements ActionListener{
 		Login_GUI.setVisible(true);
 	}
 	
+	private void Network() {
+		try {
+			socket = new Socket(ip, port);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public static void main(String[] args) {
 		new Client();
 	}
@@ -160,6 +178,9 @@ public class Client extends JFrame implements ActionListener{
 		// TODO Auto-generated method stub
 		if(e.getSource() == login_btn) {
 			System.out.println("Login Button Click!");
+			ip = ServerIP_tf.getText().trim();
+			port = Integer.parseInt(ServerPort_tf.getText().trim());
+			Network();
 		}else if(e.getSource() == notesend_btn) {
 			System.out.println("NoteSend Button Click!");
 		}else if(e.getSource() == joinroom_btn) {
