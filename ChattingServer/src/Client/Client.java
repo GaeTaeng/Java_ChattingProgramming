@@ -122,7 +122,7 @@ public class Client extends JFrame implements ActionListener{
 	}
 	
 	private void Login_init() {
-
+		
 		Login_GUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Login_GUI.setBounds(100, 100, 281, 280);
 		LoginPane = new JPanel();
@@ -133,7 +133,6 @@ public class Client extends JFrame implements ActionListener{
 		JLabel lblServerIp = new JLabel("Server IP");
 		lblServerIp.setBounds(31, 35, 57, 15);
 		LoginPane.add(lblServerIp);
-		
 		JLabel lblServerPort = new JLabel("Server Port");
 		lblServerPort.setBounds(31, 79, 62, 15);
 		LoginPane.add(lblServerPort);
@@ -191,6 +190,15 @@ public class Client extends JFrame implements ActionListener{
 		}catch(IOException e) {
 			e.printStackTrace();
 		}
+		
+		Thread th = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		})
 	}
 	
 	private void send_message(String str) { // 서버에게 메세지를 보냄.

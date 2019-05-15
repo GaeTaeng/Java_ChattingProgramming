@@ -97,6 +97,7 @@ public class Server extends JFrame implements ActionListener{
 	}
 	private void Connection() {
 		
+		
 		//1가지 쓰레드는 1가지의 일만 처리가 가능하다
 		Thread th = new Thread(new Runnable() {
 
@@ -105,10 +106,30 @@ public class Server extends JFrame implements ActionListener{
 				try {
 					textArea.append("사용자 접속 대기 중\n");
 					socket = server_socket.accept(); // 사용자 접속 무한 대기
+					
+					try {
+						is = socket.getInputStream();
+						dis = new DataInputStream(is);
+						
+						os = socket.getOutputStream();
+						dos = new DataOutputStream(os);
+						}catch(IOException e) {
+							e.printStackTrace();
+						}
+					
 					textArea.append("사용자 접속!!!\n");
+					
+					String msg = "";
+					msg = dis.readUTF();// 사용자로부터 들어오는 메시지
+					
+					textArea.append(msg);
+					dos.writeUTF("접속확인");
+					
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+				
+				
 			}
 			
 		});
