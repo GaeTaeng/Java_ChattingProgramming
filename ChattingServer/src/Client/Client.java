@@ -2,7 +2,11 @@ package Client;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -51,6 +55,10 @@ public class Client extends JFrame implements ActionListener{
 	private Socket socket;
 	private String ip;
 	private int port;
+	private InputStream is;
+	private OutputStream os;
+	private DataInputStream dis;
+	private DataOutputStream dos;
 	Client() {
 		Login_init();// 로그인창 구성 메소드
 		Main_init();
@@ -160,8 +168,12 @@ public class Client extends JFrame implements ActionListener{
 	}
 	
 	private void Network() {
+		
 		try {
 			socket = new Socket(ip, port);
+			if(socket != null) { // 정상적인 소켓 연결 완료
+				Connection();
+			}
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -169,6 +181,25 @@ public class Client extends JFrame implements ActionListener{
 		}
 	}
 	
+	private void Connection() { // 실제적인 메소드 연결
+		try {
+		is = socket.getInputStream();
+		dis = new DataInputStream(is);
+		
+		os = socket.getOutputStream();
+		dos = new DataOutputStream(os);
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void send_message(String str) { // 서버에게 메세지를 보냄.
+		try {
+			dos.writeUTF(str);
+		} catch (IOException e) { //에러처리
+			e.printStackTrace();
+		}
+	}
 	public static void main(String[] args) {
 		new Client();
 	}

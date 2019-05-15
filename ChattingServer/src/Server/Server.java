@@ -1,7 +1,11 @@
 package Server;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -34,6 +38,11 @@ public class Server extends JFrame implements ActionListener{
 	private ServerSocket server_socket;
 	private Socket socket;
 	private int port;
+	
+	private InputStream is;
+	private OutputStream os;
+	private DataInputStream dis;
+	private DataOutputStream dos;
 	
 	Server() {
 		init(); // 화면생성
