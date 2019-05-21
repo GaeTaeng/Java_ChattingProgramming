@@ -55,6 +55,8 @@ public class Client extends JFrame implements ActionListener{
 	private Socket socket;
 	private String ip;
 	private int port;
+	
+	private String id;
 	private InputStream is;
 	private OutputStream os;
 	private DataInputStream dis;
@@ -189,16 +191,24 @@ public class Client extends JFrame implements ActionListener{
 		dos = new DataOutputStream(os);
 		}catch(IOException e) {
 			e.printStackTrace();
-		}
+		} // Stream 설정 끝
+		
+		//처음 접속시 ID전송
+		send_message(id);
 		
 		Thread th = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				
+				try {
+					String msg = dis.readUTF(); // 메세지 수신
+					System.out.println("서버로부터 수신된 메세지 : " + msg);
+				} catch (IOException e) {
+					e.printStackTrace();
+				} // 메세지 수신
 			}
 			
-		})
+		});
 	}
 	
 	private void send_message(String str) { // 서버에게 메세지를 보냄.
@@ -219,6 +229,8 @@ public class Client extends JFrame implements ActionListener{
 			System.out.println("Login Button Click!");
 			ip = ServerIP_tf.getText().trim();
 			port = Integer.parseInt(ServerPort_tf.getText().trim());
+			
+			id = ID_tf.getText().trim(); // id를 받아온다.
 			Network();
 		}else if(e.getSource() == notesend_btn) {
 			System.out.println("NoteSend Button Click!");
@@ -227,6 +239,7 @@ public class Client extends JFrame implements ActionListener{
 		}else if(e.getSource() == createroom_btn) {
 			System.out.println("createroom_btn Click!");
 		}else if(e.getSource() == send_btn) {
+			send_message(textField.getText());
 			System.out.println("send_btn Click!");
 		}
 	}
