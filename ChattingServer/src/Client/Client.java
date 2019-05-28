@@ -9,6 +9,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.StringTokenizer;
+import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -61,6 +63,11 @@ public class Client extends JFrame implements ActionListener{
 	private OutputStream os;
 	private DataInputStream dis;
 	private DataOutputStream dos;
+	
+	//그 외 변수들
+	Vector user_list = new Vector();
+	Vector room_list = new Vector();
+	StringTokenizer st;
 	Client() {
 		Login_init();// 로그인창 구성 메소드
 		Main_init();
@@ -196,6 +203,12 @@ public class Client extends JFrame implements ActionListener{
 		//처음 접속시 ID전송
 		send_message(id);
 		
+		
+		// User_list에 사용자 추가.
+		user_list.add(id);
+		User_list.setListData(user_list);
+		
+		
 		Thread th = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -203,12 +216,33 @@ public class Client extends JFrame implements ActionListener{
 				try {
 					String msg = dis.readUTF(); // 메세지 수신
 					System.out.println("서버로부터 수신된 메세지 : " + msg);
+					
+					inmessage(msg);
 				} catch (IOException e) {
 					e.printStackTrace();
 				} // 메세지 수신
 			}
 			
 		});
+		th.start();
+	}
+	
+	private void inmessage(String str) { // 서버로부터 들어오는 모든 메세지
+		st = new StringTokenizer(str, "/");
+		
+		String protocol = st.nextToken();
+		String Message = st.nextToken();
+		
+		System.out.println("PROTOCOL : " + protocol);
+		System.out.println("Message : " + Message);
+		
+		if(protocol.equals("NewUser")) { // 새로운 접속자가 입장시
+			user_list.add(Message);
+			User_list.setListData(user_list);
+		}else if(protocol.equals("OldUser")) {
+			user_list.addElement(Message);;
+			User_list.setListData(user_list);
+		}
 	}
 	
 	private void send_message(String str) { // 서버에게 메세지를 보냄.

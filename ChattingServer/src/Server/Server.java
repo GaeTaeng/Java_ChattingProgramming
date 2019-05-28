@@ -109,6 +109,8 @@ public class Server extends JFrame implements ActionListener{
 					socket = server_socket.accept(); // 사용자 접속 무한 대기
 					textArea.append("사용자 접속!!!\n");
 					
+					
+					
 					UserInfo user = new UserInfo(socket);
 					user.start();
 					
@@ -117,8 +119,8 @@ public class Server extends JFrame implements ActionListener{
 				}
 			}
 				
-			}
 			
+			}
 		});
 		th.start();
 	}
@@ -148,7 +150,6 @@ public class Server extends JFrame implements ActionListener{
 		private String Nickname = "";
 
 		UserInfo() {
-			
 		}
 		UserInfo(Socket soc) {
 			this.user_socket = soc;
@@ -163,11 +164,28 @@ public class Server extends JFrame implements ActionListener{
 				dos = new DataOutputStream(os);
 
 				Nickname = dis.readUTF();// 사용자의 닉네임을 받는다.
+
+				textArea.append(Nickname + " : 사용자 접속 !");
+				
+				
+				// 기존 사용자들에게 사용자 접속을 알림.
+				System.out.println("현재 접속된 사용자 수 : " + user_vc.size());
+				
+				
+				BroadCast("NewUser/"+ Nickname);//자신에게 기존 사용자를 알림.
+				
+				for(int i = 0; i < user_vc.size(); i++) {
+					UserInfo u = (UserInfo)user_vc.elementAt(i);
+					
+					send_Message("OldUser/" + u.Nickname);
+				}
+				
+				user_vc.add(this); // 사용자에게 알린 후 Vector에 자신을 추가.
+				
+				
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
-			textArea.append(Nickname + " : 사용자 접속 !");
 		}
 		public void run() { // Thread에서 처리할 내용.
 			
@@ -180,6 +198,26 @@ public class Server extends JFrame implements ActionListener{
 				} 
 			}
 		}
+		private void BroadCast(String str) {
+			//서버에서 보내는 모든 메세지를 모든 접속중인 사용자에게 메세지를 보낼 수 있게 함.
+			for(int i = 0; i < user_vc.size(); i++) {
+				// 현재 접속된 사용자에게 메세지를 보냄
+				UserInfo u = (UserInfo)user_vc.elementAt(i);
+				u.send_Message(str);
+				
+				
+			}//이와 같은게 브로드케스트와 같은 방식
+		}
+		
+		private void send_Message(String str) {
+			//문자열을 받아서 현재 연결된 OS를 이용하여 유저에게 데이터를 넘겨줌.
+			try {
+				dos.writeUTF(str);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
 	}
 
 }
